@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>Face Recognition Attendance</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap for styling -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <!-- Font Awesome for icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <style>
+      body {
+        background-color: #f4f6f9;
+        font-family: "Poppins", sans-serif;
+      }
+      .container {
+        max-width: 700px;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        margin-top: 50px;
+        margin-bottom: 50px;
+      }
+      h2 {
+        text-align: center;
+        font-weight: 600;
+        margin-bottom: 25px;
+        color: #2c3e50;
+      }
+      .btn-gradient {
+        background: linear-gradient(45deg, #3498db, #2ecc71);
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        border-radius: 30px;
+        font-size: 16px;
+        font-weight: bold;
+        transition: all 0.3s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 300px;
+      }
+      .btn-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        opacity: 0.9;
+      }
+      .btn-gradient:disabled {
+        background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+        transform: none;
+        box-shadow: none;
+      }
+      .btn-gradient.processing {
+        background: linear-gradient(45deg, #f39c12, #e67e22);
+      }
+      #webcam-container {
+        display: none;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        height: 350px;
+        border: 2px dashed #ddd;
+        border-radius: 10px;
+        background: #f9f9f9;
+        margin: 30px 0;
+        overflow: hidden;
+      }
+      video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+      }
+      #attendance-log {
+        display: none;
+        margin-top: 20px;
+        padding: 20px;
+        background: #f8f9fa;
+        border-radius: 8px;
+        border-left: 4px solid #2ecc71;
+      }
+      #distanceDisplay {
+        font-weight: bold;
+        text-align: center;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+      }
+      .status-message {
+        text-align: center;
+        margin: 10px 0;
+        padding: 10px;
+        border-radius: 5px;
+      }
+      .status-success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+      .status-error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+      .status-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+      }
+      .attendance-marked {
+        color: #2ecc71;
+        font-weight: bold;
+        text-align: center;
+        margin: 15px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>
+        <i class="fas fa-user-check"></i> Face Recognition Attendance System
+      </h2>
+
+      <!-- Location/Distance Display -->
+      <div id="distanceDisplay" class="alert alert-info">
+        <i class="fas fa-map-marker-alt"></i>
+        <span id="distanceText">Checking your location...</span>
+      </div>
+
+      <!-- Status Message Display -->
+      <div
+        id="statusMessage"
+        class="status-message"
+        style="display: none"
+      ></div>
+
+      <!-- Start Face Recognition Button -->
+      <div class="button-container">
+        <button id="start-recognition" class="btn-gradient">
+          <i class="fas fa-camera"></i> Start Face Recognition
+        </button>
+      </div>
+
+      <!-- Webcam Container -->
+      <div id="webcam-container">
+        <video id="webcam" autoplay muted playsinline></video>
+      </div>
+
+      <!-- Attendance Log Button -->
+      <div class="button-container">
+        <button id="attendance-log-btn" class="btn-gradient">
+          <i class="fas fa-history"></i> Show Attendance Log
+        </button>
+      </div>
+
+      <!-- Attendance Log Display -->
+      <div id="attendance-log">
+        <h3><i class="fas fa-clipboard-list"></i> Attendance Log</h3>
+        <div id="log-content" class="mt-3">No attendance records found.</div>
+      </div>
+
+      <!-- Attendance Marked Notification -->
+      <div
+        id="attendance-marked"
+        class="attendance-marked"
+        style="display: none"
+      >
+        <i class="fas fa-check-circle"></i> Attendance marked successfully!
+      </div>
+
+      <!-- Reset Button (for testing purposes) -->
+      <div class="button-container">
+        <button
+          id="reset-attendance"
+          class="btn-gradient"
+          style="background: linear-gradient(45deg, #e74c3c, #c0392b)"
+        >
+          <i class="fas fa-sync-alt"></i> Reset Attendance (Test)
+        </button>
+      </div>
+    </div>
+
+    <!-- Face API -->
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+    <!-- Custom JS -->
+    <script src="js/face-detection.js"></script>
+  </body>
+</html>
